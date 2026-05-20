@@ -28,10 +28,8 @@ CREATE TABLE categories (
 
 SELECT * FROM categories;
 
-CREATE TABLE projects (
-    project_id SERIAL PRIMARY KEY,
-    project_name VARCHAR(100) NOT NULL
-);
+
+
 
 CREATE TABLE project_categories (
     project_id INT NOT NULL,
