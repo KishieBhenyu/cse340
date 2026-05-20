@@ -45,23 +45,21 @@ CREATE TABLE project_categories (
         ON DELETE CASCADE
 );
 
-SELECT * FROM project_categories;
-
-INSERT INTO projects (project_id, project_name)
+INSERT INTO projects (project_name)
 VALUES
-(1, 'Project A'),
-(2, 'Project B'),
-(3, 'Project C');
+('Community Garden'),
+('School Supply Drive'),
+('Neighborhood Cleanup');
 
-
-
-SELECT * FROM categories;
+SELECT * FROM projects;
 
 INSERT INTO categories (category_name)
 VALUES
 ('Category 1'),
 ('Category 2'),
 ('Category 3');
+
+select * from categories;
 
 INSERT INTO project_categories (project_id, category_id)
 VALUES
