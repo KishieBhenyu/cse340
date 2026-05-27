@@ -1,25 +1,30 @@
 import db from './db.js';
 
-// Get all projects
-const getAllProjects = async () => {
+// Get upcoming projects
+const getUpcomingProjects = async (number_of_projects) => {
     const query = `
         SELECT
-            project_id,
-            organization_id,
-            title,
-            description,
-            location,
-            date
-        FROM project
-        ORDER BY date;
+            p.project_id,
+            p.title,
+            p.description,
+            p.date,
+            p.location,
+            p.organization_id,
+            o.name AS organization_name
+        FROM projects p
+        JOIN organization o
+            ON p.organization_id = o.organization_id
+        WHERE p.date >= CURRENT_DATE
+        ORDER BY p.date ASC
+        LIMIT $1;
     `;
 
-    const result = await db.query(query);
+    const result = await db.query(query, [number_of_projects]);
 
     return result.rows;
 };
 
-// Get projects by organization ID
+// Get projects by organization
 const getProjectsByOrganizationId = async (organizationId) => {
     const query = `
         SELECT
@@ -29,17 +34,40 @@ const getProjectsByOrganizationId = async (organizationId) => {
             description,
             location,
             date
-        FROM project
+        FROM projects
         WHERE organization_id = $1
         ORDER BY date;
     `;
 
-    const queryParams = [organizationId];
-
-    const result = await db.query(query, queryParams);
+    const result = await db.query(query, [organizationId]);
 
     return result.rows;
 };
 
-// Export the model functions
-export { getAllProjects, getProjectsByOrganizationId };
+// Get single project details
+const getProjectDetails = async (projectId) => {
+    const query = `
+        SELECT
+            p.project_id,
+            p.title,
+            p.description,
+            p.date,
+            p.location,
+            p.organization_id,
+            o.name AS organization_name
+        FROM projects p
+        JOIN organization o
+            ON p.organization_id = o.organization_id
+        WHERE p.project_id = $1;
+    `;
+
+    const result = await db.query(query, [projectId]);
+
+    return result.rows[0];
+};
+
+export {
+    getUpcomingProjects,
+    getProjectsByOrganizationId,
+    getProjectDetails
+};

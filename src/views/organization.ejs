@@ -5,6 +5,10 @@
     <h2><%= organizationDetails.name %></h2>
     <img src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.name %> logo">
 
+    <a href="/organization/<%= project.organization_id %>">
+    View Organization
+</a>
+
     <p>Description: <%= organizationDetails.description %></p>
 
     <h3>Service Projects</h3>

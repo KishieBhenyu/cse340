@@ -1,11 +1,37 @@
 <%- include('partials/header') %>
-    <main>
-        <h1><%= title %></h1>
-        <h2>Upcoming Service Projects</h2>
-<ul>
-    <li>Park Cleanup - Join us to clean up local parks and make them beautiful!</li>
-    <li>Food Drive - Help collect and distribute food to those in need.</li>
-    <li>Community Tutoring - Volunteer to tutor students in various subjects.</li>
-</ul>
-    </main>
-    <%- include('partials/footer') %>
+
+<main>
+    <h1><%= title %></h1>
+
+    <section>
+        <% if (projects && projects.length > 0) { %>
+            <ul>
+                <% projects.forEach(project => { %>
+                    <li>
+                        <!-- Project title link -->
+                        <a href="/project/<%= project.project_id %>">
+                            <strong><%= project.title %></strong>
+                        </a>
+
+                        <!-- Project info -->
+                        <p><%= project.description %></p>
+                        <p><%= project.location %> | <%= new Date(project.date).toDateString() %></p>
+
+                        <!-- Organization link -->
+                        <p>
+                            Organization:
+                            <a href="/organization/<%= project.organization_id %>">
+                                <%= project.organization_name %>
+                            </a>
+                        </p>
+                    </li>
+                    <hr>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>No upcoming projects found.</p>
+        <% } %>
+    </section>
+</main>
+
+<%- include('partials/footer') %>
