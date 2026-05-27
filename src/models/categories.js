@@ -7,4 +7,5 @@ async function getAllCategories() {
   return result.rows;
 }
 
-export default { getAllCategories };
+// named export (matches your controller)
+export { getAllCategories };
