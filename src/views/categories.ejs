@@ -3,13 +3,15 @@
 <main>
     <h1><%= title %></h1>
 
-    <h2>Service Project Categories</h2>
-
-    <ul class="categories-list">
+    <ul>
         <% categories.forEach(category => { %>
             <li>
-                <%= category.category_name %>
+                <a href="/category/<%= category.category_id %>">
+                    <%= category.category_name %>
+                </a>
             </li>
         <% }) %>
     </ul>
 </main>
+
+<%- include('partials/footer') %>

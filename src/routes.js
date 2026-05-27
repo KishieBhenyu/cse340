@@ -12,13 +12,16 @@ import {
     showProjectDetailsPage
 } from './controllers/projects.js';
 
-import { showCategoriesPage } from './controllers/categories.js';
+import {
+    showCategoriesPage,
+    showCategoryDetailsPage
+} from './controllers/categories.js';
 
 import { testErrorPage } from './controllers/errors.js';
 
 const router = express.Router();
 
-// Home page
+// Home
 router.get('/', showHomePage);
 
 // Organizations
@@ -31,8 +34,9 @@ router.get('/project/:id', showProjectDetailsPage);
 
 // Categories
 router.get('/categories', showCategoriesPage);
+router.get('/category/:id', showCategoryDetailsPage);
 
-// Error testing
+// Error test
 router.get('/test-error', testErrorPage);
 
 export default router;
