@@ -1,27 +1,72 @@
-// Import any needed model functions
-import { getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
+// Import model functions
+import {
+    getAllOrganizations,
+    getOrganizationDetails,
+    createOrganization
+} from '../models/organizations.js';
+
 import { getProjectsByOrganizationId } from '../models/projects.js';
 
+// Show all organizations
 const showOrganizationsPage = async (req, res) => {
     const organizations = await getAllOrganizations();
 
-    const title = 'Organizations';
-
     res.render('organizations', {
-        title,
+        title: 'Organizations',
         organizations
     });
 };
 
-// Define any controller functions
+// Show organization details
 const showOrganizationDetailsPage = async (req, res) => {
     const organizationId = req.params.id;
-    const organizationDetails = await getOrganizationDetails(organizationId);
-    const projects = await getProjectsByOrganizationId(organizationId);
-    const title = 'Organization Details';
 
-    res.render('organization', {title, organizationDetails, projects});
+    const organizationDetails = await getOrganizationDetails(organizationId);
+
+    const projects = await getProjectsByOrganizationId(organizationId);
+
+    res.render('organization', {
+        title: 'Organization Details',
+        organizationDetails,
+        projects
+    });
 };
 
-// Export any controller functions
-export { showOrganizationsPage, showOrganizationDetailsPage };
+// Show new organization form
+const showNewOrganizationForm = async (req, res) => {
+    res.render('new-organization', {
+        title: 'Add New Organization'
+    });
+};
+
+const processNewOrganizationForm = async (req, res) => {
+    try {
+        console.log('Request body:', req.body);
+
+        const { name, description, contactEmail } = req.body;
+
+        const logoFilename = 'placeholder-logo.png';
+
+        const organizationId = await createOrganization(
+            name,
+            description,
+            contactEmail,
+            logoFilename
+        );
+
+        console.log('Created organization ID:', organizationId);
+
+        res.redirect(`/organization/${organizationId}`);
+    } catch (error) {
+        console.error('CREATE ERROR:', error);
+        res.status(500).send(error.message);
+    }
+};
+
+// Export controller functions
+export {
+    showOrganizationsPage,
+    showOrganizationDetailsPage,
+    showNewOrganizationForm,
+    processNewOrganizationForm
+};
