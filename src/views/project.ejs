@@ -23,11 +23,21 @@
                     <a href="/category/<%= category.category_id %>">
                         <%= category.category_name %>
                     </a>
+                    <a href="/project/<%= project.project_id %>/assign-categories">
+                        Edit Categories
+                    </a>
                 </span>
             <% }) %>
         <% } else { %>
             <p>No categories assigned.</p>
         <% } %>
+
+        <p>
+    <a href="/project/<%= project.project_id %>/assign-categories">
+        Edit Categories
+    </a>
+</p>
+
     </section>
 
     <p>
