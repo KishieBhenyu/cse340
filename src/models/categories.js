@@ -105,12 +105,119 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
     }
 };
 
+const createCategory = async (categoryName) => {
+    const query = `
+        INSERT INTO categories (category_name)
+        VALUES ($1)
+        RETURNING category_id;
+    `;
+
+    const result = await db.query(query, [categoryName]);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create category');
+    }
+
+    return result.rows[0].category_id;
+};
+
+const updateCategory = async (categoryId, categoryName) => {
+    const query = `
+        UPDATE categories
+        SET category_name = $1
+        WHERE category_id = $2
+        RETURNING category_id;
+    `;
+
+    const result = await db.query(query, [categoryName, categoryId]);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to update category');
+    }
+
+    return result.rows[0].category_id;
+};
+
+
+const showNewCategoryForm = (req, res) => {
+    res.render('new-category', {
+        title: 'Create New Category'
+    });
+};
+
+
+const processNewCategoryForm = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        errors.array().forEach(err => req.flash('error', err.msg));
+        return res.redirect('/new-category');
+    }
+
+    const { categoryName } = req.body;
+
+    try {
+        await createCategory(categoryName);
+
+        req.flash('success', 'Category created successfully');
+        res.redirect('/categories');
+    } catch (err) {
+        console.error(err);
+        req.flash('error', 'Failed to create category');
+        res.redirect('/new-category');
+    }
+};
+
+
+const showEditCategoryForm = async (req, res) => {
+    const categoryId = req.params.id;
+
+    const category = await getCategoryById(categoryId);
+
+    if (!category) {
+        return res.status(404).send('Category not found');
+    }
+
+    res.render('edit-category', {
+        title: 'Edit Category',
+        category
+    });
+};
+
+
+const processEditCategoryForm = async (req, res) => {
+    const categoryId = req.params.id;
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        errors.array().forEach(err => req.flash('error', err.msg));
+        return res.redirect(`/edit-category/${categoryId}`);
+    }
+
+    const { categoryName } = req.body;
+
+    try {
+        await updateCategory(categoryId, categoryName);
+
+        req.flash('success', 'Category updated successfully');
+        res.redirect('/categories');
+    } catch (err) {
+        console.error(err);
+        req.flash('error', 'Failed to update category');
+        res.redirect(`/edit-category/${categoryId}`);
+    }
+};
+
 // Export all functions
 export {
     getAllCategories,
     getCategoryById,
     getCategoriesByProjectId,
     getProjectsByCategoryId,
+    getCategoryDetails,
+    assignCategoryToProject,
     updateCategoryAssignments,
-    getCategoryDetails
+    createCategory,
+    updateCategory
 };
