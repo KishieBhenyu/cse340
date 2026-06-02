@@ -51,7 +51,7 @@ const showAssignCategoriesForm = async (req, res) => {
 const processAssignCategoriesForm = async (req, res) => {
     const projectId = req.params.projectId;
 
-    const selectedCategoryIds = req.body.categories || [];
+    const selectedCategoryIds = req.body.categoryIds || [];
 
     const categoryIdsArray = Array.isArray(selectedCategoryIds)
         ? selectedCategoryIds

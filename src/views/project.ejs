@@ -15,30 +15,37 @@
     </p>
 
     <section>
-        <h3>Categories</h3>
+    <h3>Categories</h3>
 
-        <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+    <% if (categories && categories.length > 0) { %>
+        <ul>
             <% categories.forEach(category => { %>
-                <span style="display:inline-block; margin-right:8px;">
+                <li>
                     <a href="/category/<%= category.category_id %>">
                         <%= category.category_name %>
                     </a>
-                    <a href="/project/<%= project.project_id %>/assign-categories">
-                        Edit Categories
-                    </a>
-                </span>
+                </li>
             <% }) %>
-        <% } else { %>
-            <p>No categories assigned.</p>
-        <% } %>
+        </ul>
+    <% } else { %>
+        <p>No categories assigned.</p>
+    <% } %>
 
-        <p>
-    <a href="/project/<%= project.project_id %>/assign-categories">
-        Edit Categories
+    <p>
+        <a href="/project/<%= project.project_id %>/assign-categories">
+            Edit Categories
+        </a>
+    </p>
+
+    <p>
+    <a href="/edit-project/<%= project.project_id %>">
+        Edit Project
     </a>
 </p>
 
-    </section>
+</section>
+
+
 
     <p>
         <a href="/projects">← Back to Projects</a>

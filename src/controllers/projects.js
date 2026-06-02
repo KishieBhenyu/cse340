@@ -1,12 +1,16 @@
 import {
     getUpcomingProjects,
     getProjectDetails,
-    createProject
+    createProject,
+    updateProject,
+    getProjectsByOrganizationId
 } from '../models/projects.js';
 
 import { getAllOrganizations } from '../models/organizations.js';
 
 import { body, validationResult } from 'express-validator';
+
+import { getCategoriesByProjectId } from '../models/categories.js';
 
 const projectValidation = [
     body('title')
@@ -51,27 +55,25 @@ const showProjectsPage = async (req, res) => {
 // Show single project details page
 const showProjectDetailsPage = async (req, res) => {
     try {
-        // Get project ID from URL
         const projectId = req.params.id;
 
-        // Retrieve project details from database
         const project = await getProjectDetails(projectId);
 
-        // Handle missing project (prevents EJS crash)
         if (!project) {
-            return res.status(404).send("Project not found");
+            return res.status(404).send('Project not found');
         }
 
-        // Render project details page safely
+        const categories = await getCategoriesByProjectId(projectId);
+
         res.render('project', {
             title: 'Project Details',
             project,
-            categories: [] // safe fallback so EJS doesn't break
+            categories
         });
 
     } catch (err) {
-        console.error("Error loading project details:", err);
-        res.status(500).send("Something went wrong");
+        console.error('Error loading project details:', err);
+        res.status(500).send('Something went wrong');
     }
 };
 
@@ -120,11 +122,75 @@ const processNewProjectForm = async (req, res) => {
     }
 };
 
+const showEditProjectForm = async (req, res) => {
+    try {
+        const projectId = req.params.id;
+
+        // Get existing project data
+        const project = await getProjectDetails(projectId);
+
+        if (!project) {
+            return res.status(404).send('Project not found');
+        }
+
+        // Get all organizations for dropdown
+        const organizations = await getAllOrganizations();
+
+        res.render('update-project', {
+            title: 'Edit Service Project',
+            project,
+            organizations
+        });
+
+    } catch (error) {
+        console.error('Error loading edit project form:', error);
+        res.status(500).send('Something went wrong');
+    }
+};
+
+const processEditProjectForm = async (req, res) => {
+    try {
+        const projectId = req.params.id;
+
+        const {
+            title,
+            description,
+            location,
+            date,
+            organizationId
+        } = req.body;
+
+        // Update project in DB
+        await updateProject(
+            projectId,
+            title,
+            description,
+            location,
+            date,
+            organizationId
+        );
+
+        req.flash('success', 'Project updated successfully.');
+
+        res.redirect(`/project/${projectId}`);
+
+    } catch (error) {
+        console.error('Error updating project:', error);
+
+        req.flash('error', 'Failed to update project.');
+
+        res.redirect(`/edit-project/${req.params.id}`);
+    }
+};
+
 // Export controller functions
 export {
     showProjectsPage,
     showProjectDetailsPage,
     showNewProjectForm,
     processNewProjectForm,
+    showEditProjectForm,
+    processEditProjectForm,
     projectValidation
+
 };

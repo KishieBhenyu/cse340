@@ -13,10 +13,12 @@ import {
 } from './controllers/organizations.js';
 
 import {
-   showProjectsPage,
+    showProjectsPage,
     showProjectDetailsPage,
     showNewProjectForm,
     processNewProjectForm,
+    showEditProjectForm,
+    processEditProjectForm,
     projectValidation
 } from './controllers/projects.js';
 
@@ -101,6 +103,14 @@ router.post(
     organizationValidation,
     processEditOrganizationForm
     
+);
+
+router.get('/edit-project/:id', showEditProjectForm);
+
+router.post(
+    '/edit-project/:id',
+    projectValidation,
+    processEditProjectForm
 );
 
 
