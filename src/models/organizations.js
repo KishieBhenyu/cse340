@@ -1,8 +1,6 @@
 import db from './db.js';
 
-/* =========================
-   GET ALL ORGANIZATIONS
-========================= */
+/* GET ALL ORGANIZATIONS */
 const getAllOrganizations = async () => {
     const query = `
         SELECT
@@ -19,9 +17,7 @@ const getAllOrganizations = async () => {
     return result.rows;
 };
 
-/* =========================
-   GET ONE ORGANIZATION
-========================= */
+/* GET ONE ORGANIZATION*/
 const getOrganizationDetails = async (organizationId) => {
     const query = `
         SELECT
@@ -39,9 +35,7 @@ const getOrganizationDetails = async (organizationId) => {
     return result.rows.length > 0 ? result.rows[0] : null;
 };
 
-/* =========================
-   CREATE ORGANIZATION
-========================= */
+/* CREATE ORGANIZATION */
 const createOrganization = async (
     name,
     description,
@@ -69,9 +63,7 @@ const createOrganization = async (
     return result.rows[0].organization_id;
 };
 
-/* =========================
-   UPDATE ORGANIZATION
-========================= */
+/*UPDATE ORGANIZATION*/
 const updateOrganization = async (
     organizationId,
     name,
@@ -105,9 +97,7 @@ const updateOrganization = async (
     return result.rows[0].organization_id;
 };
 
-/* =========================
-   EXPORTS (ONLY THIS)
-========================= */
+/* EXPORTS (ONLY THIS)*/
 export {
     getAllOrganizations,
     getOrganizationDetails,

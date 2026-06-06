@@ -24,6 +24,8 @@
     <% }) %>
 </ul>
 
-<a href="/new-organization">Create New Organization</a>
+<% if (user && user.role_name === 'admin') { %>
+    <a href="/new-organization">Add New Organization</a>
+<% } %>
 
 <%- include('partials/footer') %>

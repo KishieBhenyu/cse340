@@ -21,15 +21,11 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-/* ========================
-   BODY PARSING MIDDLEWARE
-======================== */
+/* BODY PARSING MIDDLEWARE*/
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-/* ========================
-   SESSION MIDDLEWARE
-======================== */
+/* SESSION MIDDLEWARE */
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
@@ -39,25 +35,17 @@ app.use(session({
     }
 }));
 
-/* ========================
-   FLASH MIDDLEWARE
-======================== */
+/* FLASH MIDDLEWARE */
 app.use(flash());
 
-/* ========================
-   STATIC FILES
-======================== */
+/* STATIC FILES */
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* ========================
-   VIEW ENGINE
-======================== */
+/*VIEW ENGINE*/
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-/* ========================
-   LOGGING MIDDLEWARE
-======================== */
+/*LOGGING MIDDLEWARE*/
 app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
         console.log(`${req.method} ${req.url}`);
@@ -65,32 +53,38 @@ app.use((req, res, next) => {
     next();
 });
 
-/* ========================
-   GLOBAL TEMPLATE VARIABLES
-======================== */
+/*GLOBAL TEMPLATE VARIABLES*/
 app.use((req, res, next) => {
+    res.locals.isLoggedIn = false;
+
+    if (req.session && req.session.user) {
+        res.locals.isLoggedIn = true;
+    }
+
+    res.locals.user = req.session.user || null;
     res.locals.NODE_ENV = NODE_ENV;
-    res.locals.messages = req.flash();
     next();
 });
 
-/* ========================
-   ROUTES
-======================== */
+export const requireLogin = (req, res, next) => {
+    if (!req.session.user) {
+        req.flash('error', 'Please log in first');
+        return res.redirect('/login');
+    }
+    next();
+};
+
+/*ROUTES*/
 app.use(router);
 
-/* ========================
-   404 HANDLER
-======================== */
+/*404 HANDLER*/
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
     err.status = 404;
     next(err);
 });
 
-/* ========================
-   ERROR HANDLER
-======================== */
+/*ERROR HANDLER*/
 app.use((err, req, res, next) => {
     console.error('Error occurred:', err.message);
     console.error(err.stack);
@@ -105,9 +99,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-/* ========================
-   START SERVER
-======================== */
+/* START SERVER */
 app.listen(PORT, async () => {
     try {
         await testConnection();
