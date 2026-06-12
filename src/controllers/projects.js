@@ -13,9 +13,9 @@ import { getAllOrganizations } from '../models/organizations.js';
 import { body, validationResult } from 'express-validator';
 import { getCategoriesByProjectId } from '../models/categories.js';
 
-/* =========================
+/* 
    VALIDATION
-========================= */
+ */
 const projectValidation = [
     body('title')
         .trim()
@@ -41,9 +41,9 @@ const projectValidation = [
         .isInt()
 ];
 
-/* =========================
+/* 
    PROJECT LIST PAGE
-========================= */
+*/
 const showProjectsPage = async (req, res) => {
     const projects = await getUpcomingProjects(5);
 
@@ -53,9 +53,9 @@ const showProjectsPage = async (req, res) => {
     });
 };
 
-/* =========================
+/* 
    PROJECT DETAILS PAGE
-========================= */
+ */
 const showProjectDetailsPage = async (req, res) => {
     try {
         const projectId = req.params.id;
