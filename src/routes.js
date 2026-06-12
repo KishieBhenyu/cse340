@@ -15,12 +15,14 @@ import {
 } from './controllers/organizations.js';
 
 import {
-    showProjectsPage,
+     showProjectsPage,
     showProjectDetailsPage,
     showNewProjectForm,
     processNewProjectForm,
     showEditProjectForm,
     processEditProjectForm,
+    addVolunteer,
+    removeVolunteer,
     projectValidation
 } from './controllers/projects.js';
 
@@ -188,5 +190,17 @@ router.post(
 
 /*ERROR TEST*/
 router.get('/test-error', testErrorPage);
+
+router.post(
+    '/projects/:id/volunteer',
+    requireLogin,
+    addVolunteer
+);
+
+router.post(
+    '/projects/:id/remove-volunteer',
+    requireLogin,
+    removeVolunteer
+);
 
 export default router;

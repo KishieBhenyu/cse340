@@ -1,0 +1,49 @@
+
+
+<%- include('partials/header') %>
+
+<main>
+
+<pre>USER: <%= JSON.stringify(user, null, 2) %></pre>
+<pre>IS VOLUNTEER: <%= isVolunteer %></pre>
+
+
+    <h1><%= project.title %></h1>
+
+    <p><%= project.description %></p>
+    <p><strong>Date:</strong> <%= new Date(project.date).toDateString() %></p>
+    <p><strong>Location:</strong> <%= project.location %></p>
+
+    <!--  PUT VOLUNTEER BLOCK HERE -->
+    <% if (user) { %>
+
+        <% if (isVolunteer) { %>
+
+            <p style="color:green;">✔ You are volunteering for this project</p>
+
+            <form action="/projects/<%= project.project_id %>/remove-volunteer" method="POST">
+                <button type="submit">Remove Volunteer</button>
+            </form>
+
+        <% } else { %>
+
+            <form action="/projects/<%= project.project_id %>/volunteer" method="POST">
+                <button type="submit">Volunteer for this Project</button>
+            </form>
+
+        <% } %>
+
+    <% } else { %>
+
+        <p>Please log in to volunteer.</p>
+
+    <% } %>
+
+    <hr>
+
+    <!-- categories below -->
+    <h3>Categories</h3>
+
+</main>
+
+<%- include('partials/footer') %>

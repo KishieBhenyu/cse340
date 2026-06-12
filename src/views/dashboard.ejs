@@ -1,16 +1,43 @@
 <%- include('partials/header') %>
 
 <main>
-   <h1>Dashboard</h1>
 
-<p>Name: <%= name %></p>
-<p>Email: <%= email %></p>
+    <h1>Dashboard</h1>
 
-<% if (user && user.role_name === 'admin') { %>
-    <p>
-        <a href="/users">Manage Users</a>
-    </p>
-<% } %>
+    <p>Name: <%= user.name %></p>
+    <p>Email: <%= user.email %></p>
+
+    <% if (user.role_name === 'admin') { %>
+        <p>
+            <a href="/users">Manage Users</a>
+        </p>
+    <% } %>
+
+    <hr>
+
+    <h2>My Volunteer Projects</h2>
+
+    <% if (volunteerProjects && volunteerProjects.length > 0) { %>
+
+        <ul>
+            <% volunteerProjects.forEach(project => { %>
+
+                <li>
+                    <strong><%= project.title %></strong>
+
+                    <form action="/projects/<%= project.project_id %>/remove-volunteer" method="POST" style="display:inline;">
+                        <button type="submit">Remove</button>
+                    </form>
+                </li>
+
+            <% }) %>
+        </ul>
+
+    <% } else { %>
+
+        <p>You have not volunteered for any projects.</p>
+
+    <% } %>
 
 </main>
 
